@@ -37,7 +37,6 @@ the loss adds a few penalties for predictions that fail simple wave checks.
 | Path | Purpose |
 |---|---|
 | `src/` | Original scripts from the authors' repository |
-| `2D_results/` | Original generated outputs from the base repo; kept local and ignored here |
 | `extension/` | Code and notes added for this project |
 | `extension/scripts/` | New scripts for data conversion and experiments |
 | `extension/final_results/` | Small tracked CSV summaries from the final experiments |
@@ -59,7 +58,6 @@ These files came from the original authors' repo:
 | `src/lstm_historic.py` | Historical LSTM experiment script |
 | `src/lstm_2D.py` | Grid-based LSTM prediction script |
 | `src/read_netcdf.py` | Helper script for reading NetCDF data |
-| `2D_results/` | Generated plots and CSVs from the base repo; not needed for our final runs |
 
 We kept these separate from the files we wrote for the extension.
 
