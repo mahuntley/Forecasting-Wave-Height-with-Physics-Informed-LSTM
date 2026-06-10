@@ -1,0 +1,12 @@
+.venv-tf/
+.venv/
+.vscode/
+.DS_Store
+
+*.nc
+2D_results/
+era5_chunks/
+extension/results/
+noaa/
+__pycache__/
+*.pyc
