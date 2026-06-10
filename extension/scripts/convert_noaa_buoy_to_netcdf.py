@@ -209,9 +209,9 @@ def parse_args():
     parser.add_argument("--start-year", type=int)
     parser.add_argument("--end-year", type=int)
     parser.add_argument("--report", default="extension/results/noaa_buoy_cleaning_report.csv")
-    parser.add_argument("--lat", type=float, default=32.933)
-    parser.add_argument("--lon", type=float, default=-117.391)
-    parser.add_argument("--station", default="Torrey Pines / NDBC 46225")
+    parser.add_argument("--lat", type=float, default=32.867)
+    parser.add_argument("--lon", type=float, default=-117.257)
+    parser.add_argument("--station", default="LJPC1 - La Jolla, CA")
     parser.add_argument(
         "--max-interpolate-gap",
         type=int,

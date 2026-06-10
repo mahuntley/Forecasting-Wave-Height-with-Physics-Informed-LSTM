@@ -69,7 +69,7 @@ We kept these separate from the files we wrote for the extension.
 | `extension/scripts/convert_era5_for_lstm.py` | Converts downloaded ERA5 variables into the format expected by the LSTM scripts |
 | `extension/scripts/download_era5_data.py` | Downloads ERA5 wave and wind data in smaller chunks |
 | `extension/scripts/convert_noaa_buoy_to_netcdf.py` | Cleans NOAA buoy files and converts them to hourly NetCDF |
-| `extension/final_results/` | Final summary CSV files from Brazil ERA5 and Torrey Pines NOAA runs |
+| `extension/final_results/` | Final summary CSV files from Brazil ERA5 and NOAA buoy runs |
 | `extension/README.md` | Short guide focused only on the extension folder |
 
 The main script is:
@@ -128,10 +128,11 @@ latitude  = -31.5
 longitude = -50.0
 ```
 
-### Torrey Pines NOAA Buoy Dataset
+### La Jolla / Torrey Pines NOAA Buoy Dataset
 
-We also tested the same scripts on NOAA buoy station 46225 near Torrey Pines.
-This gave us a second dataset outside the Brazil ERA5 point.
+We also tested the same scripts on NOAA station LJPC1, listed by NDBC as
+La Jolla, CA. This gave us a second dataset outside the Brazil ERA5 point. In
+our earlier notes and filenames we refer to this as the Torrey Pines NOAA run.
 
 The yearly NOAA files can be downloaded from the station history page:
 <https://www.ndbc.noaa.gov/station_history.php?station=ljpc1>
@@ -151,7 +152,7 @@ NOAA columns mapped into our NetCDF file:
 | `WSPD` | `wind` | Wind speed |
 | `WDIR` | `dwi` | Wind direction |
 
-The converted file expected by the final Torrey Pines experiment is:
+The converted file expected by the final NOAA experiment is:
 
 ```text
 noaa_torrey_pines_2017_2023_lstm.nc
@@ -160,8 +161,8 @@ noaa_torrey_pines_2017_2023_lstm.nc
 Point metadata used:
 
 ```text
-latitude  = 32.933
-longitude = -117.391
+latitude  = 32.867
+longitude = -117.257
 ```
 
 ## Environment Setup
@@ -250,9 +251,9 @@ python -u extension/scripts/convert_noaa_buoy_to_netcdf.py \
   --start-year 2017 \
   --end-year 2023 \
   --report extension/results/noaa_torrey_pines_2017_2023_cleaning_report.csv \
-  --lat 32.933 \
-  --lon -117.391 \
-  --station "Torrey Pines / NDBC 46225"
+  --lat 32.867 \
+  --lon -117.257 \
+  --station "LJPC1 - La Jolla, CA"
 ```
 
 This script replaces NOAA missing-value codes, rounds observations to hourly
@@ -260,6 +261,27 @@ timestamps, averages duplicate hours, fills short gaps, and writes a NetCDF
 file for the LSTM scripts.
 
 ## Running The Final Experiments
+
+### Quick Smoke Test
+
+The full runs below take longer. To check that the code and environment work,
+run a one-lead, one-epoch smoke test after placing a converted NetCDF file in
+the repo root:
+
+```bash
+source .venv-tf/bin/activate
+
+python -u extension/scripts/evaluate_shared_experiments.py \
+  era5_full_2013_2019_lstm_v1.nc \
+  --lat -31.5 \
+  --lon -50.0 \
+  --lead-times 6 \
+  --epochs 1 \
+  --repeats 1 \
+  --test-size 168 \
+  --no-save-models \
+  --output-dir extension/results/smoke_test
+```
 
 ### Brazil ERA5 Final Run
 
@@ -278,15 +300,15 @@ python -u extension/scripts/evaluate_shared_experiments.py \
   --output-dir extension/results/shared_eval_wind_brazil_epochs10_repeats10
 ```
 
-### Torrey Pines NOAA Final Run
+### La Jolla / Torrey Pines NOAA Final Run
 
 ```bash
 source .venv-tf/bin/activate
 
 python -u extension/scripts/evaluate_shared_experiments.py \
   noaa_torrey_pines_2017_2023_lstm.nc \
-  --lat 32.933 \
-  --lon -117.391 \
+  --lat 32.867 \
+  --lon -117.257 \
   --epochs 10 \
   --patience 100 \
   --repeats 10 \
@@ -389,7 +411,7 @@ extension/final_results/brazil_era5_summary.csv
 extension/final_results/brazil_era5_best_pinn_by_lead.csv
 ```
 
-### Torrey Pines NOAA Buoy, 2017-2023
+### La Jolla / Torrey Pines NOAA Buoy, 2017-2023
 
 Final run:
 
@@ -404,7 +426,7 @@ Final run:
 | 18h | 23.87 | 21.94 | 21.12 | 21.06 |
 | 24h | 27.88 | 24.18 | 23.69 | 23.44 |
 
-At Torrey Pines, the Hs-only model was slightly best at 6 hours. The
+For the NOAA buoy dataset, the Hs-only model was slightly best at 6 hours. The
 physics-regularized LSTM was best at 12, 18, and 24 hours. This suggests that
 recent wave history is very strong at short lead times, while wind and period
 matter more as the forecast gets farther out.
@@ -461,7 +483,7 @@ full PINN
 - We did not validate against operational wave models such as SWAN or WAVEWATCH
   III.
 - The Brazil experiment uses ERA5 reanalysis data, not direct buoy observations.
-- The Torrey Pines dataset is a different location and data source, so its
+- The NOAA buoy dataset is a different location and data source, so its
   numbers should not be compared one-to-one with the Brazil ERA5 numbers.
 
 ## Reproducibility Notes

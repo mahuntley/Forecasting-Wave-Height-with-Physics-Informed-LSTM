@@ -21,8 +21,8 @@ checked without rerunning the full experiments.
 |---|---|
 | `final_results/brazil_era5_summary.csv` | Brazil ERA5 final metrics |
 | `final_results/brazil_era5_best_pinn_by_lead.csv` | Best regularizer weights for Brazil |
-| `final_results/torrey_pines_noaa_summary.csv` | Torrey Pines NOAA final metrics |
-| `final_results/torrey_pines_noaa_best_pinn_by_lead.csv` | Best regularizer weights for Torrey Pines |
+| `final_results/torrey_pines_noaa_summary.csv` | NOAA buoy final metrics |
+| `final_results/torrey_pines_noaa_best_pinn_by_lead.csv` | Best regularizer weights for the NOAA buoy run |
 
 Larger generated outputs go in `results/`. That folder is ignored by git.
 
@@ -43,13 +43,13 @@ python -u extension/scripts/evaluate_shared_experiments.py \
   --output-dir extension/results/shared_eval_wind_brazil_epochs10_repeats10
 ```
 
-Torrey Pines NOAA:
+La Jolla / Torrey Pines NOAA:
 
 ```bash
 python -u extension/scripts/evaluate_shared_experiments.py \
   noaa_torrey_pines_2017_2023_lstm.nc \
-  --lat 32.933 \
-  --lon -117.391 \
+  --lat 32.867 \
+  --lon -117.257 \
   --epochs 10 \
   --patience 100 \
   --repeats 10 \
